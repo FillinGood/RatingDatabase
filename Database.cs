@@ -11,6 +11,18 @@ public static class Database {
         Connection.Open();
     }
 
+    public static void AddItem(Item item) {
+        const string sql = @"
+            INSERT INTO items (name, rating)
+            VALUES (?, ?)";
+        SQLiteCommand command = new SQLiteCommand(sql, Connection);
+        command.Parameters.AddWithValue("", item.Name);
+        command.Parameters.AddWithValue("", item.Rating);
+        command.ExecuteNonQuery();
+        int id = (int)Connection.LastInsertRowId;
+        item.ID = id;
+    }
+
     public static IEnumerable<Item> GetItems() {
         const string sql = @"
             SELECT
@@ -27,7 +39,7 @@ public static class Database {
                 ID = reader.GetInt32(0),
                 Name = reader.GetString(1),
                 Rating = reader.GetInt32(2),
-                Tags = reader.GetString(3).Split(',')
+              //  Tags = reader.GetString(3)?.Split(',')??System.Array.Empty<string>()
             };
         }
         reader.Close();

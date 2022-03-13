@@ -11,6 +11,8 @@ public class StringJoinConverter : IValueConverter {
     }
 
     public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) {
-        throw new NotImplementedException();
+        if(value is not string str)
+            return Array.Empty<string>();
+        return str.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     }
 }

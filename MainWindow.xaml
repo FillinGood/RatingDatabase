@@ -7,9 +7,11 @@
         mc:Ignorable="d"
         Title="Rating Database"
         Height="450"
-        Width="800">
+        Width="800"
+        x:Name="wnd"
+        >
     <Window.DataContext>
-        <local:Controller />
+        <local:Controller x:Name="ctl" />
     </Window.DataContext>
     <Window.Resources>
         <local:RatingColorConverter x:Key="rcc"/>
@@ -21,17 +23,33 @@
                 <DataGridTextColumn Header="Название"
                                     Binding="{Binding Name}"
                                     Width="2*" />
-                <DataGridTemplateColumn Header="Оценка" Width="60">
+                <DataGridTemplateColumn Header="Оценка"
+                                        Width="60">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid Background="{Binding Rating, Converter={StaticResource rcc}}">
-                                <TextBlock Text="{Binding Rating}"  HorizontalAlignment="Center"/>
+                                <TextBlock Text="{Binding Rating}"
+                                           HorizontalAlignment="Center" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
-                <DataGridTextColumn Header="Тэги" Binding="{Binding Tags, Converter={StaticResource sjc}}" Width="*"/>
+                <DataGridTextColumn Header="Тэги"
+                                    Binding="{Binding Tags, Converter={StaticResource sjc}}"
+                                    Width="*" />
             </DataGrid.Columns>
+            <DataGrid.Resources>
+                <ContextMenu x:Key="context">
+                    <MenuItem Header="Удалить"
+                              Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=DataGrid}}"
+                              CommandParameter="{Binding}" />
+                </ContextMenu>
+            </DataGrid.Resources>
+            <DataGrid.RowStyle>
+                <Style TargetType="DataGridRow">
+                    <Setter Property="ContextMenu" Value="{StaticResource context}"/>
+                </Style>
+            </DataGrid.RowStyle>
         </DataGrid>
     </Grid>
 </Window>
