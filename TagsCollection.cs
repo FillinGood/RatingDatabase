@@ -7,15 +7,8 @@ namespace RatingDatabase;
 [TypeConverter(typeof(TagsConverter))]
 public class TagsCollection : IEnumerable<string>, IComparable, IComparable<TagsCollection> {
     public static TagsCollection Empty { get; } = new(Array.Empty<string>());
-    private string[] Values { get; }
 
-    public TagsCollection(string values) {
-        Values = values.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-    }
-    public TagsCollection(string[] values) {
-        Values = new string[values.Length];
-        values.CopyTo(Values, 0);
-    }
+    private string[] Values { get; }
 
     public IEnumerator<string> GetEnumerator() {
         return ((IEnumerable<string>)Values).GetEnumerator();
@@ -37,6 +30,14 @@ public class TagsCollection : IEnumerable<string>, IComparable, IComparable<Tags
         string a = string.Join(',', Values);
         string b = string.Join(',', other.Values);
         return a.CompareTo(b);
+    }
+
+    public TagsCollection(string values) {
+        Values = values.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+    }
+    public TagsCollection(string[] values) {
+        Values = new string[values.Length];
+        values.CopyTo(Values, 0);
     }
 
     public override string ToString() {

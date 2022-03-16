@@ -5,7 +5,6 @@ using System.ComponentModel;
 namespace RatingDatabase;
 public class Controller : Model {
     public ObservableCollection<Item> Items { get; } = new();
-
     public Command<Item> DeleteCommand { get; }
 
     private void Delete(Item item) {
@@ -16,15 +15,6 @@ public class Controller : Model {
         if(sender is not Item item)
             return;
         Database.UpdateItem(item);
-    }
-
-    public Controller() {
-        DeleteCommand = new(Delete);
-        foreach(Item item in Database.GetItems()) {
-            Items.Add(item);
-            item.PropertyChanged += OnItemChanged;
-        }
-        Items.CollectionChanged += Items_CollectionChanged;
     }
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
@@ -41,5 +31,14 @@ public class Controller : Model {
             Database.RemoveItem(item.ID);
             item.PropertyChanged -= OnItemChanged;
         }
+    }
+
+    public Controller() {
+        DeleteCommand = new(Delete);
+        foreach(Item item in Database.GetItems()) {
+            Items.Add(item);
+            item.PropertyChanged += OnItemChanged;
+        }
+        Items.CollectionChanged += Items_CollectionChanged;
     }
 }
