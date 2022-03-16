@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data.SQLite;
-using System.Windows;
 
 namespace RatingDatabase;
 public static class Database {
@@ -9,7 +7,7 @@ public static class Database {
     private static SQLiteConnection Connection { get; }
 
     static Database() {
-            Connection = new($"Data Source={DATABASE_FILE}; Version=3;");
+        Connection = new($"Data Source={DATABASE_FILE}; Version=3;");
         Connection.Open();
     }
 
@@ -52,12 +50,12 @@ public static class Database {
                 ID = r.GetInt32(0),
                 Name = r.GetString(1),
                 Rating = r.GetInt32(2),
-                Tags = tags.Split(',')
+                Tags = new(tags.Split(','))
             };
         }
     }
 
-    public static void SetTags(int id, string[] tags) {
+    public static void SetTags(int id, TagsCollection tags) {
         Execute("DELETE FROM tags WHERE item = ?", id);
         foreach(string tag in tags) {
             Execute("INSERT INTO tags (item, tag) VALUES (?, ?)", id, tag);

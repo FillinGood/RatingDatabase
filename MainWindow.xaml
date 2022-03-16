@@ -15,7 +15,6 @@
     </Window.DataContext>
     <Window.Resources>
         <local:RatingColorConverter x:Key="rcc" />
-        <local:StringJoinConverter x:Key="sjc" />
     </Window.Resources>
     <Grid>
         <DataGrid ItemsSource="{Binding Items}"
@@ -37,7 +36,7 @@
                     </DataGridTextColumn.CellStyle>
                 </DataGridTextColumn>
                 <DataGridTextColumn Header="Тэги"
-                                    Binding="{Binding Tags, Converter={StaticResource sjc}}"
+                                    Binding="{Binding Tags}"
                                     Width="*" />
             </DataGrid.Columns>
             <DataGrid.Resources>

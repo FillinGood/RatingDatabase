@@ -14,13 +14,13 @@ public class Item : Model {
             Application.Current.Dispatcher.Invoke(() => Notify(nameof(Rating)));
         }
     }
-    public string[] Tags { get => Get<string[]>(); set => Set(value); }
+    public TagsCollection Tags { get => Get<TagsCollection>(); set => Set(value); }
 
     public Item() { 
         ID = 0;
         Name = "";
         Rating = 0;
-        Tags = System.Array.Empty<string>();
+        Tags = TagsCollection.Empty;
     }
 
     public override string ToString() {
