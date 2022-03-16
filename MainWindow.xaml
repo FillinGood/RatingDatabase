@@ -9,7 +9,7 @@
         Height="450"
         Width="800"
         x:Name="wnd"
-        >
+        Icon="/Star_Icon.png">
     <Window.DataContext>
         <local:Controller x:Name="ctl" />
     </Window.DataContext>
