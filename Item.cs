@@ -6,15 +6,7 @@ public class Item : Model {
     public string Name { get => Get<string>(); set => Set(value); }
     public int Rating {
         get => Get<int>();
-        set {
-            int v = value;
-            if(value < 0)
-                v = 0;
-            else if(value > 10)
-                v = 10;
-            Set(v);
-            Application.Current.Dispatcher.Invoke(() => Notify(nameof(Rating)));
-        }
+        set => Set(Util.Clamp(value, 0, 10));
     }
     public TagsCollection Tags { get => Get<TagsCollection>(); set => Set(value); }
 
