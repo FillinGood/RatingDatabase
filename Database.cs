@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SQLite;
+using System.IO;
 
 namespace RatingDatabase;
 public static class Database {
@@ -7,7 +9,11 @@ public static class Database {
     private static SQLiteConnection Connection { get; }
 
     static Database() {
-        Connection = new($"Data Source={DATABASE_FILE}; Version=3;");
+        if(DesignerProperties.GetIsInDesignMode(new())) {
+            Connection = new($"Data Source={Path.Combine(Util.CurrentSourcePath, DATABASE_FILE)}; Version=3;");
+        } else {
+            Connection = new($"Data Source={DATABASE_FILE}; Version=3;");
+        }
         Connection.Open();
     }
 
