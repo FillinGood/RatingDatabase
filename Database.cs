@@ -15,11 +15,7 @@ public static class Database {
         const string sql = @"
             INSERT INTO items (name, rating)
             VALUES (?, ?)";
-        SQLiteCommand command = new SQLiteCommand(sql, Connection);
-        command.Parameters.AddWithValue("", item.Name);
-        command.Parameters.AddWithValue("", item.Rating);
-        command.ExecuteNonQuery();
-        int id = (int)Connection.LastInsertRowId;
+        int id = Execute(sql, item.Name, item.Rating);
         item.ID = id;
     }
 
@@ -32,15 +28,33 @@ public static class Database {
             LEFT JOIN tags t ON
                 t.item = i.id
             GROUP BY i.id";
-        SQLiteCommand command = new SQLiteCommand(sql, Connection);
+        foreach (SQLiteDataReader r in Query(sql)) {
+            yield return new Item() {
+                ID = r.GetInt32(0),
+                Name = r.GetString(1),
+                Rating = r.GetInt32(2),
+                //  Tags = reader.GetString(3)?.Split(',')??System.Array.Empty<string>()
+            };
+        }
+    }
+
+    private static int Execute(string sql, params object[] pars) {
+        SQLiteCommand command = new(sql, Connection);
+        foreach (object par in pars) {
+            command.Parameters.AddWithValue("", par);
+        }
+        command.ExecuteNonQuery();
+        return (int)Connection.LastInsertRowId;
+    }
+
+    private static IEnumerable<SQLiteDataReader> Query(string sql, params object[] pars) {
+        SQLiteCommand command = new(sql, Connection);
+        foreach(object par in pars) {
+            command.Parameters.AddWithValue("", par);
+        }
         SQLiteDataReader reader = command.ExecuteReader();
         while(reader.Read()) {
-            yield return new Item() {
-                ID = reader.GetInt32(0),
-                Name = reader.GetString(1),
-                Rating = reader.GetInt32(2),
-              //  Tags = reader.GetString(3)?.Split(',')??System.Array.Empty<string>()
-            };
+            yield return reader;
         }
         reader.Close();
     }
