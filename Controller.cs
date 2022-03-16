@@ -16,24 +16,31 @@ public class Controller : Model {
     private void OnItemChanged(object? sender, PropertyChangedEventArgs e) {
         if(sender is not Item item)
             return;
-        Debug.WriteLine($"{item} {e.PropertyName}");
+        Database.UpdateItem(item);
     }
 
     public Controller() {
         DeleteCommand = new(Delete);
         foreach(Item item in Database.GetItems()) {
             Items.Add(item);
+            item.PropertyChanged += OnItemChanged;
         }
         Items.CollectionChanged += Items_CollectionChanged;
     }
 
     private void Items_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
-        if (e.Action == NotifyCollectionChangedAction.Add) {
+        if(e.Action == NotifyCollectionChangedAction.Add) {
             if(e.NewItems is null)
                 return;
             Item item = (Item)e.NewItems[0]!;
             Database.AddItem(item);
             item.PropertyChanged += OnItemChanged;
+        } else if(e.Action == NotifyCollectionChangedAction.Remove) {
+            if(e.OldItems is null)
+                return;
+            Item item = (Item)e.OldItems[0]!;
+            Database.RemoveItem(item.ID);
+            item.PropertyChanged -= OnItemChanged;
         }
     }
 }

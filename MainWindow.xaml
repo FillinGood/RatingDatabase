@@ -28,8 +28,7 @@
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
                             <Grid Background="{Binding Rating, Converter={StaticResource rcc}}">
-                                <TextBlock Text="{Binding Rating}"
-                                           HorizontalAlignment="Center" />
+                                <local:EditableTextBlock Text="{Binding Rating, Mode=TwoWay}" />
                             </Grid>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
