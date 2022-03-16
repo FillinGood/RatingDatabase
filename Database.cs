@@ -9,7 +9,7 @@ public static class Database {
     private static SQLiteConnection Connection { get; }
 
     static Database() {
-        Connection = new($"Data Source={DATABASE_FILE}; Version=3;");
+            Connection = new($"Data Source={DATABASE_FILE}; Version=3;");
         Connection.Open();
     }
 
