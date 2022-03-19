@@ -4,11 +4,35 @@ using System.ComponentModel;
 
 namespace RatingDatabase;
 public class Controller : Model {
+    public Item SelectedItem { get => Get<Item>(); set => Set(value); } 
+    public string SearchName { 
+        get => Get<string>();
+        set {
+            Set(value);
+            UpdateSearch();
+        }
+    }
     public ObservableCollection<Item> Items { get; } = new();
     public Command<Item> DeleteCommand { get; }
+    public Command ClearSearchCommand { get; }
 
     private void Delete(Item item) {
         Items.Remove(item);
+    }
+
+    private void ClearSearch() {
+        SearchName = string.Empty;
+    }
+
+    private void UpdateSearch() {
+        if(string.IsNullOrEmpty(SearchName))
+            return;
+        foreach (Item item in Items) {
+            if (item.Name.Contains(SearchName)) {
+                SelectedItem = item;
+                break;
+            }
+        }
     }
 
     private void OnItemChanged(object? sender, PropertyChangedEventArgs e) {
@@ -35,6 +59,7 @@ public class Controller : Model {
 
     public Controller() {
         DeleteCommand = new(Delete);
+        ClearSearchCommand = new(ClearSearch);
         foreach(Item item in Database.GetItems()) {
             Items.Add(item);
             item.PropertyChanged += OnItemChanged;

@@ -17,8 +17,29 @@
         <local:RatingColorConverter x:Key="rcc" />
     </Window.Resources>
     <Grid>
-        <DataGrid ItemsSource="{Binding Items}"
-                  AutoGenerateColumns="false">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBox Text="{Binding SearchName, UpdateSourceTrigger=PropertyChanged}" />
+            <Button Grid.Column="1"
+                    Command="{Binding ClearSearchCommand}"
+                    Width="20"
+                    FontSize="8"
+                    Content="╳" />
+        </Grid>
+
+        <DataGrid  Grid.Row="1"
+                   SelectionChanged="DataGrid_SelectionChanged"
+                   ItemsSource="{Binding Items}"
+                   AutoGenerateColumns="false"
+                   IsSynchronizedWithCurrentItem="True"
+                   SelectedItem="{Binding SelectedItem}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Название"
                                     Binding="{Binding Name}"
